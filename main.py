@@ -4,6 +4,22 @@ import tkinter
 # ---------------------------- PASSWORD GENERATOR ------------------------------- #
 
 # ---------------------------- SAVE PASSWORD ------------------------------- #
+def save(event):
+    # 1. Get the data
+    website = website_entry.get()
+    email = email_entry.get()
+    password = password_entry.get()
+
+    # 2.Open the file in append mode and write the data
+    with open("./data.txt", mode="a") as data_file:
+        data_file.write(f"{website}  |  {email}  |  {password}\n")
+
+    # 3.Clear the website and password entries
+    website_entry.delete(0, tkinter.END)
+    password_entry.delete(0, tkinter.END)
+
+    # 4.Put the cursor back in website entry
+    website_entry.focus()
 
 
 # ---------------------------- UI SETUP ------------------------------- #
@@ -39,8 +55,9 @@ password_entry.grid(row=3, column=1, sticky="EW")
 generate_password_button = tkinter.Button(text="Generate Password")
 generate_password_button.grid(row=3, column=2, sticky="EW") # Stretches to match the layout
 
-add_button = tkinter.Button(text="Add", width=36)
+add_button = tkinter.Button(text="Add", width=36, command=save)
 add_button.grid(row=4, column=1, columnspan=2, sticky="EW")
+window.bind("<Return>", save)  # Listen for the Keyboard "ENTER" key
 
 
 
