@@ -1,6 +1,8 @@
 import tkinter
 from tkinter import messagebox
 import random
+import pandas
+import os
 
 
 
@@ -15,7 +17,6 @@ def generate_password():
     nr_symbols = random.randint(2, 4)
     nr_numbers = random.randint(2, 4)
 
-    password_list = []
     password_letters = [random.choice(letters) for _ in range(nr_letters)]
     password_symbols = [random.choice(symbols) for _ in range(nr_symbols)]
     password_numbers = [random.choice(numbers) for _ in range(nr_numbers)]
@@ -48,9 +49,22 @@ def save(event=None):
         is_ok = messagebox.askokcancel(title=website, message=f"\nEmail: {email}"
                                                               f"\nPassword: {password} \n\nis it ok to save ?")
         if is_ok:
-            # 2.Open the file in append mode and write the data
-            with open("./data.txt", mode="a") as data_file:
-                data_file.write(f"{website}  |  {email}  |  {password}\n")
+            # 2.Format data for Pandas
+            new_data = {"website" : [website],
+                        "email" : [email],
+                        "password" : [password]}
+
+            # Convert the dictionary to a DataFrame
+            new_dataframe = pandas.DataFrame(new_data)
+
+            #Append the DataFrame to the CSV
+            if os.path.isfile("password_data.csv"):
+                # If the file exists, append (mode='a') and skip the header
+                new_dataframe.to_csv(path_or_buf="password_data.csv", mode="a", header=False, index=False)
+            else:
+                # If the file does NOT exist, create it (mode='w') and include the header
+                new_dataframe.to_csv(path_or_buf="password_data.csv", mode="w", header=True, index=False)
+
 
             # 3.Clear the website and password entries
             website_entry.delete(0, tkinter.END)
