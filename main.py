@@ -1,25 +1,37 @@
 import tkinter
+from tkinter import messagebox
+
+from sympy.codegen.ast import none
 
 
 # ---------------------------- PASSWORD GENERATOR ------------------------------- #
 
 # ---------------------------- SAVE PASSWORD ------------------------------- #
-def save(event):
+def save(event=None):
     # 1. Get the data
     website = website_entry.get()
     email = email_entry.get()
     password = password_entry.get()
 
-    # 2.Open the file in append mode and write the data
-    with open("./data.txt", mode="a") as data_file:
-        data_file.write(f"{website}  |  {email}  |  {password}\n")
+    # Field empty check
+    if len(website) == 0 or len(email) == 0 or len(password) == 0:
+        messagebox.showinfo("Error", "Please enter all required information")
 
-    # 3.Clear the website and password entries
-    website_entry.delete(0, tkinter.END)
-    password_entry.delete(0, tkinter.END)
+    else:
+        # Pop-Up Message
+        is_ok = messagebox.askokcancel(title=website, message=f"\nEmail: {email}"
+                                                              f"\nPassword: {password} \n\nis it ok to save ?")
+        if is_ok:
+            # 2.Open the file in append mode and write the data
+            with open("./data.txt", mode="a") as data_file:
+                data_file.write(f"{website}  |  {email}  |  {password}\n")
 
-    # 4.Put the cursor back in website entry
-    website_entry.focus()
+            # 3.Clear the website and password entries
+            website_entry.delete(0, tkinter.END)
+            password_entry.delete(0, tkinter.END)
+
+            # 4.Put the cursor back in website entry
+            website_entry.focus()
 
 
 # ---------------------------- UI SETUP ------------------------------- #
